@@ -18,9 +18,16 @@ fn print_name(name:&str)-> String{
     hello
 }
 
+#[get("/address/<address>")]
+fn print_address(address:&str)-> String{
+    let mut hello = String::from("Your address is :  ");
+    hello.push_str(address);
+    hello
+}
+
 #[rocket::main]
 async  fn main() -> Result<(),rocket::Error>{
-    let _rocket = rocket::build().mount("/", routes![index,custom_index,print_name])
+    let _rocket = rocket::build().mount("/", routes![index,custom_index,print_name,print_address])
     .launch()
     .await?;
     Ok(())
