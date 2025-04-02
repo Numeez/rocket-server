@@ -1,5 +1,12 @@
 #[macro_use] extern crate rocket;
+use rocket::serde::json::Json;
+use serde::Deserialize;
 
+#[derive(Deserialize,Debug)]
+struct  User {
+    name :String,
+    city : String
+}
 
 #[get("/")]
 fn index()-> &'static str {
@@ -9,6 +16,11 @@ fn index()-> &'static str {
 #[get("/custom")]
 fn custom_index()-> &'static str {
     "Hello Server"
+}
+
+#[post("/user",format="json",data="<user>")]
+fn post_user(user:Json<User>)->String{
+    format!("{:?}",user)
 }
 
 #[get("/name/<name>")]
@@ -27,7 +39,7 @@ fn print_address(address:&str)-> String{
 
 #[rocket::main]
 async  fn main() -> Result<(),rocket::Error>{
-    let _rocket = rocket::build().mount("/", routes![index,custom_index,print_name,print_address])
+    let _rocket = rocket::build().mount("/", routes![index,custom_index,print_name,print_address,post_user])
     .launch()
     .await?;
     Ok(())
